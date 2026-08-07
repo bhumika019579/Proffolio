@@ -1,0 +1,1 @@
+export const getGithubLoginUrl = () => "http://localhost:8080/auth/github";
