@@ -1,26 +1,41 @@
 :root {
-  --color-primary-start: #FF6B35;
-  --color-primary-end: #E63946;
-  --color-primary-solid: #E8492D;
-  --color-bg: #FFFFFF;
-  --color-bg-soft: #FAFAFA;
-  --color-border: #F0F0F0;
-  --color-text-primary: #1A1A1A;
-  --color-text-secondary: #6B6B6B;
-  --color-verified: #2D9D5F;
-  --color-error: #DC2626;
+  --color-primary: #C15F3C;
+  --color-primary-hover: #A94F30;
+  --color-primary-light: #EDE1D3;
 
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --color-bg: #FAF7F2;
+  --color-bg-card: #FFFFFF;
+  --color-bg-soft: #F3EEE5;
+
+  --color-border: #E8E2D8;
+
+  --color-text-primary: #2B2620;
+  --color-text-secondary: #7A7368;
+
+  --color-verified: #6B8E5A;
+  --color-error: #C0392B;
+
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
 }
 
 body {
   margin: 0;
-  background-color: var(--color-bg-soft);
+  background-color: var(--color-bg);
   color: var(--color-text-primary);
 }
 
+a {
+  color: inherit;
+}
+
+/* Buttons */
+
 .btn-primary {
-  background: linear-gradient(135deg, var(--color-primary-start), var(--color-primary-end));
+  background-color: var(--color-primary);
   color: white;
   border: none;
   padding: 10px 20px;
@@ -28,16 +43,72 @@ body {
   font-weight: 600;
   font-size: 14px;
   cursor: pointer;
+  transition: background-color 0.15s ease;
 }
 
 .btn-primary:hover {
-  opacity: 0.9;
+  background-color: var(--color-primary-hover);
 }
 
+.btn-primary:disabled {
+  background-color: var(--color-border);
+  color: var(--color-text-secondary);
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  background-color: transparent;
+  color: var(--color-primary);
+  border: 1px solid var(--color-primary);
+  padding: 9px 18px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.btn-secondary:hover {
+  background-color: var(--color-primary-light);
+}
+
+/* Cards */
+
 .card {
-  background: var(--color-bg);
+  background: var(--color-bg-card);
   border: 1px solid var(--color-border);
   border-radius: 12px;
   padding: 16px;
   margin-bottom: 12px;
+}
+
+/* Inputs */
+
+.input-field {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+  background-color: var(--color-bg-card);
+  color: var(--color-text-primary);
+  font-family: inherit;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.input-field:focus {
+  border-color: var(--color-primary);
+}
+
+/* Tags */
+
+.tag-pill {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 14px;
+  background-color: var(--color-primary-light);
+  color: var(--color-primary);
+  display: inline-block;
 }
