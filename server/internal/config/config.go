@@ -7,16 +7,16 @@ import (
 	"github.com/joho/godotenv"
 )
 
-type config struct {
-	port string
+type Config struct {
+	Port string
 }
 
-func LoadConfig() *config {
+func LoadConfig() *Config {
 	err := godotenv.Load()
 	if err!=nil{
 		log.Println("no .env file found")
 	}
-	return &config{
-		port:os.Getenv("PORT"),
+	return &Config{
+		Port:os.Getenv("PORT"),
 	}
 }
