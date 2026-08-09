@@ -5,6 +5,7 @@ import (
 	"log"
 
 	"github.com/bhumika019579/prooffolio/server/internal/config"
+	"github.com/bhumika019579/prooffolio/server/internal/models"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -19,5 +20,18 @@ func Connect(cfg *config.Config)*gorm.DB{
 		log.Fatal("failed to connect db:",err)
 	}
 	log.Println("database connected successfully")
+	err=database.AutoMigrate(
+		&models.User{},
+		&models.Repo{},
+		&models.Post{},
+		&models.Tag{},
+		&models.RepoTag{},
+		&models.Like{},
+		&models.Comment{},
+	)
+	if err!=nil{
+		log.Fatal("failed to migrate database :",err)
+	}
+	log.Println("database migrated successfully")
 	return database
 }
