@@ -5,9 +5,13 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"strconv"
 
 	"github.com/bhumika019579/prooffolio/server/internal/config"
+	"github.com/bhumika019579/prooffolio/server/internal/models"
+	"github.com/bhumika019579/prooffolio/server/pkg/utils"
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 type githubTokenResponse struct{
 	AccessToken string `json:"access_token"`
@@ -22,7 +26,7 @@ func GithubLogin(cfg *config.Config) gin.HandlerFunc{
 			c.Redirect(http.StatusTemporaryRedirect,redirectURL)
 	}
 }
-func GithubCallback(cfg *config.Config) gin.HandlerFunc{
+func GithubCallback(cfg *config.Config,db*gorm.DB) gin.HandlerFunc{
 	return func(c*gin.Context){
 		code:=c.Query("code")
 		if code==""{
@@ -70,6 +74,34 @@ func GithubCallback(cfg *config.Config) gin.HandlerFunc{
 			Bio       string `json:"bio"`
 		}
         json.Unmarshal(body2,&githubUser)
+		var user models.User
+		result := db.Where("github_id = ?", githubUser.ID).First(&user)
+
+		if result.Error != nil {
+			user = models.User{
+				Name:              githubUser.Name,
+				Email:             githubUser.Email,
+				GithubID:          githubUser.ID,
+				GithubUsername:    githubUser.Login,
+				GithubAccessToken: tokenResp.AccessToken,
+				AvatarURL:         githubUser.AvatarURL,
+				Bio:               githubUser.Bio,
+			}
+			db.Create(&user)
+		} else {
+			user.GithubAccessToken = tokenResp.AccessToken
+			user.AvatarURL = githubUser.AvatarURL
+			user.Bio = githubUser.Bio
+			db.Save(&user)
+		}
+		jwtToken, err := utils.GenerateJWT(strconv.FormatUint(uint64(user.ID), 10), cfg.JWTSecret)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to generate token"})
+			return
+		}
+
+		frontendURL := "http://localhost:5173/?token=" + jwtToken
+		c.Redirect(http.StatusTemporaryRedirect, frontendURL)
 
 	}
 }
