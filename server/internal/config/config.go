@@ -14,6 +14,10 @@ type Config struct {
 	DBUser string
 	DBPassword string
 	DBName string 
+	GithubClientID      string
+	GithubClientSecret  string
+	GithubRedirectURL   string
+	JWTSecret  string 
 }
 
 func LoadConfig() *Config {
@@ -28,5 +32,9 @@ func LoadConfig() *Config {
 		DBUser: os.Getenv("DB_USER"),
 		DBPassword: os.Getenv("DB_PASSWORD"),
 		DBName: os.Getenv("DB_NAME"),
+		GithubClientID: os.Getenv("GITHUB_CLIENT_ID"),
+		GithubClientSecret: os.Getenv("GITHUB_CLIENT_SECRET"),
+		GithubRedirectURL: os.Getenv("GITHUB_REDIRECT_URL"),
+		JWTSecret: os.Getenv("JWT_SECRET"),
 	}
 }
