@@ -1,6 +1,7 @@
 package services
 
 import (
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -19,6 +20,10 @@ type GithubRepo struct {
 type LanguageBreakdown struct {
 	Name       string
 	Percentage float64
+}
+type ReadmeResp struct {
+	Content  string `json:"content"`
+	Encoding string `json:"encoding"`
 }
 
 func FetchUserRepos(accessToken string) ([]GithubRepo, error) {
@@ -64,7 +69,7 @@ func FetchRepoLanguages(accessToken,owner,repoName string)([]LanguageBreakdown,e
 		return nil,fmt.Errorf("github returned status %d",resp.StatusCode)
 	}
 	body,_:=io.ReadAll(resp.Body)
-	if err!=nil{
+	if err !=nil{
 		return nil,err
 	}
 	var rawLanguages map[string]int 
@@ -87,4 +92,38 @@ func FetchRepoLanguages(accessToken,owner,repoName string)([]LanguageBreakdown,e
 		})
 	}
 	return breakdown,nil
+}
+func FetchRepoReadme(accessToken,owner,repoName string)(string, error){
+	url := fmt.Sprintf("https://api.github.com/repos/%s/%s/readme", owner, repoName)
+	req,err:=http.NewRequest("GET",url,nil)
+	if err!=nil{
+		return "",err
+	}
+	req.Header.Set("Authorization","Bearer "+accessToken)
+	req.Header.Set("Accept","application/json")
+	resp,err:=http.DefaultClient.Do(req)
+	if err!=nil{
+		return "",fmt.Errorf("failed to reach github:%w",err)
+	}
+	defer resp.Body.Close()
+	if resp.StatusCode == http.StatusNotFound {
+		return "", nil
+	}
+	if resp.StatusCode!=http.StatusOK{
+		return "",fmt.Errorf("github returned status:%d",resp.StatusCode)
+	}
+	body,_:=io.ReadAll(resp.Body)
+	if err!=nil{
+		return "",err
+	}
+	var readme  ReadmeResp
+	if err:=json.Unmarshal(body,&readme);err!=nil{
+		return "",err
+
+	}
+	decoded,err:=base64.StdEncoding.DecodeString(readme.Content)
+	if err != nil {
+		return "", fmt.Errorf("failed to decode readme content: %w", err)
+	}
+	return string(decoded),nil
 }
