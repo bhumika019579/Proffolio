@@ -5,8 +5,6 @@ import (
 	"io"
 	"net/http"
 	"net/url"
-	"strconv"
-
 	"github.com/bhumika019579/prooffolio/server/internal/config"
 	"github.com/bhumika019579/prooffolio/server/internal/models"
 	"github.com/bhumika019579/prooffolio/server/pkg/utils"
@@ -94,7 +92,7 @@ func GithubCallback(cfg *config.Config,db*gorm.DB) gin.HandlerFunc{
 			user.Bio = githubUser.Bio
 			db.Save(&user)
 		}
-		jwtToken, err := utils.GenerateJWT(strconv.FormatUint(uint64(user.ID), 10), cfg.JWTSecret)
+		jwtToken, err := utils.GenerateJWT(user.ID, cfg.JWTSecret)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to generate token"})
 			return
