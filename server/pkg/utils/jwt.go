@@ -8,7 +8,7 @@ import (
 )
 
 func GenerateJWT(userID string, Secret string)(string,error) {
-	claims := jwt.Mapclaims{
+	claims := jwt.MapClaims{
 		"user_id":userID,
 		"exp":time.Now().Add(7*24*time.Hour).Unix(),
 	}
@@ -20,7 +20,7 @@ func GenerateJWT(userID string, Secret string)(string,error) {
 	return signedToken,nil
 }
 func VerifyJWT(tokenString string,secret string)(uint,error){
-	token,err:=jwt.parse(tokenString,func(t*jwt.token)(interface{},error){
+	token,err:=jwt.Parse(tokenString,func(t*jwt.Token)(interface{},error){
 		return []byte(secret),nil
 	})
 	if err!=nil{
