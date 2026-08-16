@@ -5,6 +5,7 @@ import (
 
 	"github.com/bhumika019579/prooffolio/server/internal/config"
 	"github.com/bhumika019579/prooffolio/server/internal/db"
+	"github.com/bhumika019579/prooffolio/server/internal/routes"
 	"github.com/gin-gonic/gin"
 )
 
@@ -18,5 +19,6 @@ func main() {
 			"status":"ok",
 		})
 	})
+	routes.SetUpRoutes(r, cfg, database)
 	r.Run(":"+cfg.Port)
 }
