@@ -18,6 +18,7 @@ type Config struct {
 	GithubClientSecret  string
 	GithubRedirectURL   string
 	JWTSecret  string 
+	GroqAPIKey string
 }
 
 func LoadConfig() *Config {
@@ -36,5 +37,6 @@ func LoadConfig() *Config {
 		GithubClientSecret: os.Getenv("GITHUB_CLIENT_SECRET"),
 		GithubRedirectURL: os.Getenv("GITHUB_REDIRECT_URL"),
 		JWTSecret: os.Getenv("JWT_SECRET"),
+		GroqAPIKey: os.Getenv("GROQ_API_KEY"),
 	}
 }
