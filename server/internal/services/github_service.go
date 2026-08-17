@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"regexp"
+	"strconv"
 )
 
 type GithubRepo struct {
@@ -126,4 +128,37 @@ func FetchRepoReadme(accessToken,owner,repoName string)(string, error){
 		return "", fmt.Errorf("failed to decode readme content: %w", err)
 	}
 	return string(decoded),nil
+}
+func FetchCommitCount(accessToken,owner,repoName string)(int,error){
+	url := fmt.Sprintf("https://api.github.com/repos/%s/%s/commits?per_page=1", owner, repoName)
+	req,err:=http.NewRequest("GET",url,nil)
+	if err!=nil{
+		return 0,err
+	}
+	req.Header.Set("Authorization","Bearer "+accessToken)
+	req.Header.Set("Accept","application/json")
+	resp,err:=http.DefaultClient.Do(req)
+	if err!=nil{
+		return 0,fmt.Errorf("failed to reach github:%w",err)
+	}
+	defer resp.Body.Close()
+	if resp.StatusCode!=http.StatusOK{
+		return 0,fmt.Errorf("github returned status:%d",resp.StatusCode)
+	}
+	linkHeader:=resp.Header.Get("link")
+	if linkHeader==""{
+		return 1,nil
+	}
+	re:=regexp.MustCompile(`page=(\d+)>; rel="last"`)
+	matches:=re.FindStringSubmatch(linkHeader)
+	if len(matches)<2{
+		return 1,nil
+	}
+	count,err:=strconv.Atoi(matches[1])
+	if err != nil {
+		return 0, fmt.Errorf("failed to parse commit count: %w", err)
+	}
+	return count,nil
+
+
 }
