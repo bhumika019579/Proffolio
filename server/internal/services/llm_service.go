@@ -18,7 +18,7 @@ type groqRequest struct {
 }
 type groqResponse struct {
 	Choices []struct {
-		Message groqMessage `json:"groq message"`
+		Message groqMessage `json:"message"`
 	} `json:"choices"`
 }
 
@@ -28,7 +28,7 @@ func GenerateRepoSummary(GroqAPIKey, readme string) (string, error) {
 	}
 	prompt := "Summarize this GitHub repository's README in 2-3 concise sentences, focused on what the project does:\n\n" + readme
 	reqBody := groqRequest{
-		Model: "llama-3.1-8b-instant",
+		Model: "openai/gpt-oss-20b",
 		Messages: []groqMessage{
 			{Role: "user", Content: prompt},
 		},
