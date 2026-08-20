@@ -14,6 +14,8 @@ func SetUpRoutes(r *gin.Engine, cfg *config.Config, db *gorm.DB){
 	api:=r.Group("/api")
 	api.Use(middleware.AuthMiddleware(cfg.JWTSecret))
 	{
+		api.GET("/repos",handlers.GetUserRepos(db))
+		api.POST("/repos",handlers.LinkRepo(db,cfg.GroqAPIKey))
 		
 	}
 }
