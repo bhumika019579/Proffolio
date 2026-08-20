@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"net/http"
+	"strings"
 
 	"github.com/bhumika019579/prooffolio/server/internal/models"
 	"github.com/bhumika019579/prooffolio/server/internal/services"
@@ -22,5 +23,65 @@ func GetUserRepos(db *gorm.DB)gin.HandlerFunc{
 			c.JSON(http.StatusInternalServerError,gin.H{"error":err.Error()})
 		}
 		c.JSON(http.StatusOK,repos)
+	}
+}
+func LinkRepo(db *gorm.DB,GroqAPIKey string)gin.HandlerFunc{
+	return func(c *gin.Context){
+		userID:=c.GetUint("user_id")
+		var chosenRepo services.GithubRepo
+		if err:=c.ShouldBindJSON(&chosenRepo); err!=nil{
+			c.JSON(http.StatusBadRequest,gin.H{"error":"invalid request body"})
+			return 
+		}
+		parts:=strings.SplitN(chosenRepo.FullName, "/",2)
+		if len(parts)!=2{
+			c.JSON(http.StatusBadRequest,gin.H{"error":"invalid repo full name"})
+			return 
+		}
+		owner,repoName:=parts[0],parts[1]
+		var user models.User
+		if err:=db.First(&user,userID).Error;err!=nil{
+			c.JSON(http.StatusNotFound, gin.H{"error": "user not found"})
+			return
+		}
+		token:=user.GithubAccessToken
+		newRepo,err:=services.CreateRepoFromGithub(db,userID,chosenRepo)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to create repo: " + err.Error()})
+			return
+		}
+		commitCount,err:=services.FetchCommitCount(token,owner,repoName)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to fetch commit count: " + err.Error()})
+			return
+		}
+		newRepo.CommitCount=commitCount
+		languages,err:=services.FetchRepoLanguages(token,owner,repoName)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to fetch repo languages: " + err.Error()})
+			return
+		}
+		if err:=services.TagRepoLanguages(db,newRepo.ID,languages); err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to tag languages: " + err.Error()})
+			return
+		}
+		readme,err:=services.FetchRepoReadme(token,owner,repoName)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to fetch readme: " + err.Error()})
+			return
+		}
+		summary,err:=services.GenerateRepoSummary(GroqAPIKey,readme)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to generate summary: " + err.Error()})
+			return
+		}
+		newRepo.Summary=summary
+		newRepo.Status="linked"
+		if err:=db.Save(newRepo).Error;err!=nil{
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to save repo: " + err.Error()})
+			return
+		}
+		c.JSON(http.StatusOK,newRepo)
+
 	}
 }

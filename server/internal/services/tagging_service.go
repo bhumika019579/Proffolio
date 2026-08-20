@@ -10,7 +10,7 @@ func TagRepoLanguages(db *gorm.DB,repoID uint,languages[]LanguageBreakdown) erro
 		var tag models.Tag
 		result:=db.Where("name=?",lang.Name).First(&tag)
 		if result.Error!=nil{
-			tag:=models.Tag{Name:lang.Name}
+			tag=models.Tag{Name:lang.Name}
 			if err:=db.Create(&tag).Error; err!=nil{
              return err
 			}
