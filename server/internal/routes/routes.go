@@ -11,6 +11,7 @@ import (
 func SetUpRoutes(r *gin.Engine, cfg *config.Config, db *gorm.DB){
 	r.GET("/auth/github",handlers.GithubLogin(cfg))
 	r.GET("/auth/github/callback",handlers.GithubCallback(cfg,db))
+	r.GET("/users/:username/profile",handlers.GetUserProfile(db))
 	api:=r.Group("/api")
 	api.Use(middleware.AuthMiddleware(cfg.JWTSecret))
 	{
