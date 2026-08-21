@@ -16,6 +16,7 @@ func SetUpRoutes(r *gin.Engine, cfg *config.Config, db *gorm.DB){
 	{
 		api.GET("/repos",handlers.GetUserRepos(db))
 		api.POST("/repos",handlers.LinkRepo(db,cfg.GroqAPIKey))
+		api.POST("/posts",handlers.CreatePost(db))
 		
 	}
 }

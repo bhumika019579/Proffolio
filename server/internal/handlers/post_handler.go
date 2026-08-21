@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"net/http"
-
 	"github.com/bhumika019579/prooffolio/server/internal/models"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -30,5 +29,19 @@ func CreatePost(db *gorm.DB)gin.HandlerFunc{
 			c.JSON(http.StatusForbidden,gin.H{"error":"you dont own this repo"})
 			return 
 		}
+		newPost:=models.Post{
+			UserID: userID,
+			RepoID: input.RepoID,
+			Caption: input.Caption,
+		}
+		if err:=db.Create(&newPost).Error;err!=nil{
+			c.JSON(http.StatusInternalServerError,gin.H{"error":"failed to create post"})
+			return 
+		}
+		if err:=db.Preload("User").Preload("Repo").First(&newPost,newPost.ID).Error;err!=nil{
+			c.JSON(http.StatusInternalServerError,gin.H{"error":"post created but failed to fetch its details"})
+			return 
+		}
+		c.JSON(http.StatusCreated,newPost)
 	}
 }
