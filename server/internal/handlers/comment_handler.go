@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"net/http"
+	"os/user"
 	"strconv"
 
 	"github.com/bhumika019579/prooffolio/server/internal/models"
@@ -48,5 +49,27 @@ func CreateComment(db *gorm.DB)gin.HandlerFunc{
 		 }
 		 c.JSON(http.StatusCreated,newComment)
 
+	}
+}
+func GetComments(db *gorm.DB)gin.HandlerFunc{
+	return func(c*gin.Context){
+		postID:=c.Param("post_id")
+		postIDuint,err:=strconv.ParseUint(postID,10,64)
+		 if err != nil {
+           c.JSON(http.StatusBadRequest, gin.H{"error": "invalid post id"})
+           return
+		 }
+		 var post models.Post
+		 if err:=db.First(&post,uint(postIDuint)).Error;err!=nil{
+			c.JSON(http.StatusNotFound,gin.H{"error":"post not found"})
+			return
+		 }
+		 var comments []models.Comment
+		 if err:=db.Where("post_id=?",uint(postIDuint)).Preload(user).Order("created_at_asc").
+		 Find(&comments).Error;err!=nil{
+			c.JSON(http.StatusInternalServerError,gin.H{"error":"failed to fetch comments"})
+			return 
+		 }
+		 c.JSON(http.StatusOK,comments)
 	}
 }

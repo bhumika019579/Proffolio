@@ -12,12 +12,14 @@ func SetUpRoutes(r *gin.Engine, cfg *config.Config, db *gorm.DB){
 	r.GET("/auth/github",handlers.GithubLogin(cfg))
 	r.GET("/auth/github/callback",handlers.GithubCallback(cfg,db))
 	r.GET("/users/:username/profile",handlers.GetUserProfile(db))
+	r.GET("/posts/:postId/comments", handlers.GetComments(db))
 	api:=r.Group("/api")
 	api.Use(middleware.AuthMiddleware(cfg.JWTSecret))
 	{
 		api.GET("/repos",handlers.GetUserRepos(db))
 		api.POST("/repos",handlers.LinkRepo(db,cfg.GroqAPIKey))
 		api.POST("/posts",handlers.CreatePost(db))
+		api.POST("/posts/:postId/comments", handlers.CreateComment(db))
 		
 	}
 }
