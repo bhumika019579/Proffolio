@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"net/http"
-	"os/user"
 	"strconv"
 
 	"github.com/bhumika019579/prooffolio/server/internal/models"
@@ -65,7 +64,7 @@ func GetComments(db *gorm.DB)gin.HandlerFunc{
 			return
 		 }
 		 var comments []models.Comment
-		 if err:=db.Where("post_id=?",uint(postIDuint)).Preload(user).Order("created_at_asc").
+		 if err:=db.Where("post_id=?",uint(postIDuint)).Preload("User").Order("created_at_asc").
 		 Find(&comments).Error;err!=nil{
 			c.JSON(http.StatusInternalServerError,gin.H{"error":"failed to fetch comments"})
 			return 
