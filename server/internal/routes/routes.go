@@ -14,6 +14,7 @@ func SetUpRoutes(r *gin.Engine, cfg *config.Config, db *gorm.DB){
 	r.GET("/users/:username/profile",handlers.GetUserProfile(db))
 	r.GET("/posts/:postId/comments", handlers.GetComments(db))
 	r.GET("/feed", handlers.GetFeed(db))
+	r.GET("/search", handlers.SearchRepos(db))
 	api:=r.Group("/api")
 	api.Use(middleware.AuthMiddleware(cfg.JWTSecret))
 	{
