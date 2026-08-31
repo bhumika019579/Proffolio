@@ -21,7 +21,9 @@ func SetUpRoutes(r *gin.Engine, cfg *config.Config, db *gorm.DB){
 		api.GET("/repos",handlers.GetUserRepos(db))
 		api.POST("/repos",handlers.LinkRepo(db,cfg.GroqAPIKey))
 		api.POST("/posts",handlers.CreatePost(db))
+		api.DELETE("/posts/:postId", handlers.DeletePost(db))
 		api.POST("/posts/:postId/comments", handlers.CreateComment(db))
+		api.DELETE("/comments/:commentId", handlers.DeleteComment(db))
 		api.POST("/posts/:postId/like", handlers.ToggleLike(db))
 		api.GET("/posts/:postId/likes", handlers.GetAllLikes(db))
 		

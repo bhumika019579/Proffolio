@@ -1,6 +1,10 @@
 package models
 
-import "time"
+import (
+	"time"
+
+	"gorm.io/gorm"
+)
 
 type Comment struct {
 	ID        uint      `gorm:"primaryKey" json:"id"`
@@ -11,4 +15,5 @@ type Comment struct {
 	Post      Post      `gorm:"foreignKey:PostID" json:"-"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
+	DeletedAt gorm.DeletedAt `gorm:"index" json:"-"`
 }

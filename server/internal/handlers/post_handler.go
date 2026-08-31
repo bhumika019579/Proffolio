@@ -45,3 +45,32 @@ func CreatePost(db *gorm.DB)gin.HandlerFunc{
 		c.JSON(http.StatusCreated,newPost)
 	}
 }
+func DeletePost(db*gorm.DB)gin.HandlerFunc{
+	return func(c*gin.Context){
+		userID := c.GetUint("user_id")
+		postID := c.Param("postId")
+		var post models.Post
+		if err := db.First(&post, postID).Error; err != nil {
+			c.JSON(http.StatusNotFound, gin.H{"error": "post not found"})
+			return
+		}
+		if post.UserID != userID {
+			c.JSON(http.StatusForbidden, gin.H{"error": "you don't own this post"})
+			return
+		}
+		if err := db.Where("post_id = ?", post.ID).Delete(&models.Comment{}).Error; err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to delete post's comments"})
+			return
+		}
+		if err := db.Where("post_id = ?", post.ID).Delete(&models.Like{}).Error; err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to delete post's likes"})
+			return
+		}
+		if err := db.Delete(&post).Error; err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to delete post"})
+			return
+		}
+		c.JSON(http.StatusOK,gin.H{"message":"post deleted"})
+
+	}
+}

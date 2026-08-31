@@ -72,3 +72,33 @@ func GetComments(db *gorm.DB)gin.HandlerFunc{
 		 c.JSON(http.StatusOK,comments)
 	}
 }
+func DeleteComment(db *gorm.DB) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		userID := c.GetUint("user_id")
+		commentID := c.Param("commentId")
+
+		var comment models.Comment
+		if err := db.First(&comment, commentID).Error; err != nil {
+			c.JSON(http.StatusNotFound, gin.H{"error": "comment not found"})
+			return
+		}
+
+		var post models.Post
+		if err := db.First(&post, comment.PostID).Error; err != nil {
+			c.JSON(http.StatusNotFound, gin.H{"error": "post not found"})
+			return
+		}
+
+		if comment.UserID != userID && post.UserID != userID {
+			c.JSON(http.StatusForbidden, gin.H{"error": "you can't delete this comment"})
+			return
+		}
+
+		if err := db.Delete(&comment).Error; err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to delete comment"})
+			return
+		}
+
+		c.JSON(http.StatusOK, gin.H{"message": "comment deleted"})
+	}
+}
