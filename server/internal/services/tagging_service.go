@@ -1,6 +1,8 @@
 package services
 
 import (
+	"log"
+
 	"github.com/bhumika019579/prooffolio/server/internal/models"
 	"gorm.io/gorm"
 )
@@ -12,7 +14,8 @@ func TagRepoLanguages(db *gorm.DB,repoID uint,languages[]LanguageBreakdown) erro
 		if result.Error!=nil{
 			tag=models.Tag{Name:lang.Name}
 			if err:=db.Create(&tag).Error; err!=nil{
-             return err
+             log.Printf("failed to create tag %s: %v", lang.Name, err)
+				continue
 			}
 		}
 		repoTag:=models.RepoTag{
@@ -21,7 +24,8 @@ func TagRepoLanguages(db *gorm.DB,repoID uint,languages[]LanguageBreakdown) erro
 			Percentage: lang.Percentage,
 		}
 		if err:=db.Create(&repoTag).Error; err!=nil{
-			return err
+			log.Printf("failed to tag repo %d with language %s: %v", repoID, lang.Name, err)
+			continue
 		}
 	}
 	return nil

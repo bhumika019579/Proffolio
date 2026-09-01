@@ -44,6 +44,16 @@ func LinkRepo(db *gorm.DB,GroqAPIKey string)gin.HandlerFunc{
 			c.JSON(http.StatusNotFound, gin.H{"error": "user not found"})
 			return
 		}
+		var existingRepo models.Repo
+		err := db.Where("user_id = ? AND repo_url = ?", userID, chosenRepo.HTMLURL).First(&existingRepo).Error
+		if err == nil {
+			c.JSON(http.StatusConflict, gin.H{"error": "you've already linked this repo"})
+			return
+		}
+		if err != gorm.ErrRecordNotFound {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to check for existing repo"})
+			return
+		}
 		token:=user.GithubAccessToken
 		newRepo,err:=services.CreateRepoFromGithub(db,userID,chosenRepo)
 		if err != nil {

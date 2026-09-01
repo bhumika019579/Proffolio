@@ -22,8 +22,9 @@ func CreatePost(db *gorm.DB)gin.HandlerFunc{
 			  return 
 		}
 		var repo models.Repo
-		if err:=db.First(&repo,input.RepoID);err!=nil{
+		if err:=db.First(&repo,input.RepoID).Error;err!=nil{
 			c.JSON(http.StatusBadRequest,gin.H{"error":"repo not found"})
+			return 
 		}
 		if repo.UserID!=userID{
 			c.JSON(http.StatusForbidden,gin.H{"error":"you dont own this repo"})
