@@ -18,7 +18,7 @@ function SearchResultsPage() {
       setLoading(true);
       try {
         const res = await search(query);
-        setResults(res.data);
+        setResults(res.data.results);
       } catch (err) {
         setError("Search failed");
         console.error(err);

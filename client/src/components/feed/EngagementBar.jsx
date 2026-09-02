@@ -1,9 +1,37 @@
-import { useState } from "react";
-import { likePost, unlikePost } from "../../api/postApi";
+import { useState, useEffect } from "react";
+import { likePost, unlikePost, getLikes, getComments } from "../../api/postApi";
+import { useAuth } from "../../hooks/useAuth";
 
-function EngagementBar({ postId, likeCount, commentCount, isLikedByMe }) {
-  const [liked, setLiked] = useState(isLikedByMe);
-  const [count, setCount] = useState(likeCount);
+function EngagementBar({ postId }) {
+  const { user } = useAuth();
+  const [liked, setLiked] = useState(false);
+  const [count, setCount] = useState(0);
+  const [commentCount, setCommentCount] = useState(0);
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const [likesRes, commentsRes] = await Promise.all([
+          getLikes(postId),
+          getComments(postId)
+        ]);
+        
+        const likes = Array.isArray(likesRes.data) ? likesRes.data : (likesRes.data.likes || []);
+        const comments = Array.isArray(commentsRes.data) ? commentsRes.data : (commentsRes.data.comments || []);
+        
+        setCount(likes.length);
+        setCommentCount(comments.length);
+        
+        if (user) {
+          const isLiked = likes.some(like => like.user_id === user.id || like.id === user.id);
+          setLiked(isLiked);
+        }
+      } catch (err) {
+        console.error("Failed to fetch engagement data:", err);
+      }
+    }
+    fetchData();
+  }, [postId, user]);
 
   const handleLikeToggle = async () => {
     try {

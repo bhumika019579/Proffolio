@@ -10,16 +10,16 @@ function RepoCard({ repo }) {
       }}
     >
       <div style={{ fontWeight: "600", marginBottom: "4px" }}>
-        {repo.name}
+        {repo.repo_name}
       </div>
       <p style={{ fontSize: "14px", color: "var(--color-text-secondary)" }}>
-        {repo.purposeSummary}
+        {repo.summary}
       </p>
 
       <div style={{ display: "flex", gap: "12px", fontSize: "13px", marginTop: "8px" }}>
         <span>⭐ {repo.stars}</span>
         <span>🍴 {repo.forks}</span>
-        <span>📝 {repo.commitCount} commits</span>
+        <span>📝 {repo.commit_count} commits</span>
       </div>
 
       <div style={{ display: "flex", gap: "6px", marginTop: "8px", flexWrap: "wrap" }}>

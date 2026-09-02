@@ -1,3 +1,4 @@
 import axiosClient from "./axiosClient";
 
-export const getFeed = () => axiosClient.get("/feed");
+export const getFeed = (page = 1, limit = 20) =>
+  axiosClient.get("/feed", { params: { page, limit } });
