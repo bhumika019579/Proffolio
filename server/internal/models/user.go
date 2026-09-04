@@ -11,6 +11,7 @@ type User struct {
 	GithubAccessToken string    `json:"-"`
 	AvatarURL         string    `json:"avatar_url"`
 	Bio               string    `json:"bio"`
+	Skills            string    `json:"skills"`
 	CreatedAt         time.Time `json:"created_at"`
 	UpdatedAt         time.Time `json:"updated_at"`
 }

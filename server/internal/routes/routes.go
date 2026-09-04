@@ -26,6 +26,7 @@ func SetUpRoutes(r *gin.Engine, cfg *config.Config, db *gorm.DB){
 		api.DELETE("/comments/:commentId", handlers.DeleteComment(db))
 		api.POST("/posts/:postId/like", handlers.ToggleLike(db))
 		api.GET("/posts/:postId/likes", handlers.GetAllLikes(db))
+		api.PATCH("/me", handlers.UpdateUserProfile(db))
 		
 	}
 }

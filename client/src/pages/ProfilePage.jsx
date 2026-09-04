@@ -34,7 +34,7 @@ function ProfilePage() {
   if (error) return <p style={{ color: "var(--color-error)" }}>{error}</p>;
   if (!profile) return null;
 
-  const isOwnProfile = loggedInUser?.username === username;
+  const isOwnProfile = loggedInUser?.github_username === username;
 
   return (
     <div>
