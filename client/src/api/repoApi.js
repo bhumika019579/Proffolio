@@ -1,4 +1,5 @@
 import axiosClient from "./axiosClient";
 
-export const fetchRepoData = (githubUrl) =>
-  axiosClient.post("/repos/fetch", { githubUrl });
+export const getGithubRepos = () => axiosClient.get("/api/repos");
+
+export const linkRepo = (repoData) => axiosClient.post("/api/repos", repoData);

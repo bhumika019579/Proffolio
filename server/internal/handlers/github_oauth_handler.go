@@ -54,7 +54,7 @@ func GithubCallback(cfg *config.Config,db*gorm.DB) gin.HandlerFunc{
 			return
 		}
 		req2,_:=http.NewRequest("GET", "https://api.github.com/user", nil)
-		req2.Header.Set("Authorization","Bearer"+tokenResp.AccessToken)
+		req2.Header.Set("Authorization","Bearer "+tokenResp.AccessToken)
 		req2.Header.Set("Accept","application/json")
 		resp2,err:=http.DefaultClient.Do(req2)
 		if err!=nil{
