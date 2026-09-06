@@ -39,7 +39,7 @@ function ProfilePage() {
   return (
     <div>
       <ProfileHeader user={profile.user} isOwnProfile={isOwnProfile} />
-      <SkillsSummary skills={profile.skills} />
+      <SkillsSummary skills={profile.user.skills} />
       <h3>Posts</h3>
       <ProfilePostsList posts={profile.posts} />
     </div>

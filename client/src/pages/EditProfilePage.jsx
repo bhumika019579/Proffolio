@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { updateProfile, uploadAvatar } from "../api/userApi";
+import { updateProfile } from "../api/userApi";
 import { useAuth } from "../hooks/useAuth";
 
 function EditProfilePage() {
   const { user } = useAuth();
   const [bio, setBio] = useState(user?.bio || "");
-  const [avatarFile, setAvatarFile] = useState(null);
+  const [skills, setSkills] = useState(user?.skills || "");
   const [saving, setSaving] = useState(false);
   const navigate = useNavigate();
 
@@ -15,14 +15,8 @@ function EditProfilePage() {
     setSaving(true);
 
     try {
-      if (avatarFile) {
-        const formData = new FormData();
-        formData.append("avatar", avatarFile);
-        await uploadAvatar(formData);
-      }
-
-      await updateProfile({ bio });
-      navigate(`/profile/${user.username}`);
+      await updateProfile({ bio, skills });
+      navigate(`/profile/${user.github_username}`);
     } catch (err) {
       console.error("Failed to update profile:", err);
     } finally {
@@ -33,16 +27,6 @@ function EditProfilePage() {
   return (
     <form onSubmit={handleSubmit}>
       <h2>Edit Profile</h2>
-
-      <label style={{ display: "block", marginBottom: "6px", fontSize: "14px" }}>
-        Profile Picture
-      </label>
-      <input
-        type="file"
-        accept="image/*"
-        onChange={(e) => setAvatarFile(e.target.files[0])}
-        style={{ marginBottom: "16px" }}
-      />
 
       <label style={{ display: "block", marginBottom: "6px", fontSize: "14px" }}>
         Bio
@@ -57,6 +41,22 @@ function EditProfilePage() {
           borderRadius: "8px",
           border: "1px solid var(--color-border)",
           fontFamily: "inherit",
+        }}
+      />
+
+      <label style={{ display: "block", marginBottom: "6px", fontSize: "14px", marginTop: "16px" }}>
+        Skills (comma-separated)
+      </label>
+      <input
+        type="text"
+        value={skills}
+        onChange={(e) => setSkills(e.target.value)}
+        placeholder="Go, React, PostgreSQL..."
+        style={{
+          width: "100%",
+          padding: "10px",
+          borderRadius: "8px",
+          border: "1px solid var(--color-border)",
         }}
       />
 
