@@ -56,3 +56,16 @@ func UpdateUserProfile(db*gorm.DB)gin.HandlerFunc{
 		c.JSON(http.StatusOK,user)
 	}
 }
+func GetMe(db *gorm.DB) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		userID := c.GetUint("user_id")
+
+		var user models.User
+		if err := db.First(&user, userID).Error; err != nil {
+			c.JSON(http.StatusNotFound, gin.H{"error": "user not found"})
+			return
+		}
+
+		c.JSON(http.StatusOK, user)
+	}
+}

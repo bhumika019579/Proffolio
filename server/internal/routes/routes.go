@@ -27,6 +27,7 @@ func SetUpRoutes(r *gin.Engine, cfg *config.Config, db *gorm.DB){
 		api.POST("/posts/:postId/like", handlers.ToggleLike(db))
 		api.GET("/posts/:postId/likes", handlers.GetAllLikes(db))
 		api.PATCH("/me", handlers.UpdateUserProfile(db))
+		api.GET("/me", handlers.GetMe(db))
 		
 	}
 }
