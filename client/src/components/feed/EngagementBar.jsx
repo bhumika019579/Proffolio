@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { likePost, unlikePost, getLikes, getComments } from "../../api/postApi";
+import { toggleLike, getLikes, getComments } from "../../api/postApi";
 import { useAuth } from "../../hooks/useAuth";
 
 function EngagementBar({ postId }) {
@@ -33,20 +33,15 @@ function EngagementBar({ postId }) {
     fetchData();
   }, [postId, user]);
 
-  const handleLikeToggle = async () => {
-    try {
-      if (liked) {
-        await unlikePost(postId);
-        setCount((prev) => prev - 1);
-      } else {
-        await likePost(postId);
-        setCount((prev) => prev + 1);
-      }
-      setLiked(!liked);
-    } catch (err) {
-      console.error("Failed to update like:", err);
-    }
-  };
+const handleLikeToggle = async () => {
+  try {
+    await toggleLike(postId);
+    setLiked(!liked);
+    setCount((prev) => (liked ? prev - 1 : prev + 1));
+  } catch (err) {
+    console.error("Failed to update like:", err);
+  }
+};
 
   return (
     <div

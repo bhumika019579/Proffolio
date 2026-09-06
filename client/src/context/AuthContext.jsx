@@ -1,4 +1,5 @@
 import { createContext, useState, useEffect } from "react";
+import axiosClient from "../api/axiosClient";
 
 export const AuthContext = createContext();
 
@@ -13,6 +14,14 @@ export function AuthProvider({ children }) {
       localStorage.removeItem("token");
     }
   }, [token]);
+  useEffect(() => {
+  if (token && !user) {
+    axiosClient
+      .get("/api/me", { headers: { Authorization: `Bearer ${token}` } })
+      .then((res) => setUser(res.data))
+      .catch(() => setToken(null));
+  }
+}, [token, user]);
 
   const login = (userData, jwt) => {
     setUser(userData);
