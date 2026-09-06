@@ -11,12 +11,11 @@ function HomePage() {
     const token = params.get("token");
 
     if (token) {
-      localStorage.setItem("token", token);
-      axiosClient.get("/api/me").then((res) => {
-        login(res.data, token);
-        window.history.replaceState({}, "", "/");
-      });
-        }
+  axiosClient.get("/api/me", { headers: { Authorization: `Bearer ${token}` } }).then((res) => {
+    login(res.data, token);
+    window.history.replaceState({}, "", "/");
+  });
+}
           }, []);
   return (
     <div>
