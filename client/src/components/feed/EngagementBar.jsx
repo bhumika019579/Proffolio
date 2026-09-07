@@ -9,29 +9,43 @@ function EngagementBar({ postId }) {
   const [commentCount, setCommentCount] = useState(0);
 
   useEffect(() => {
-    async function fetchData() {
-      try {
-        const [likesRes, commentsRes] = await Promise.all([
-          getLikes(postId),
-          getComments(postId)
-        ]);
-        
-        const likes = Array.isArray(likesRes.data) ? likesRes.data : (likesRes.data.likes || []);
-        const comments = Array.isArray(commentsRes.data) ? commentsRes.data : (commentsRes.data.comments || []);
-        
-        setCount(likes.length);
-        setCommentCount(comments.length);
-        
-        if (user) {
-          const isLiked = likes.some(like => like.user_id === user.id || like.id === user.id);
-          setLiked(isLiked);
-        }
-      } catch (err) {
-        console.error("Failed to fetch engagement data:", err);
+  async function fetchData() {
+    try {
+      const likesRes = await getLikes(postId);
+
+      const likes = Array.isArray(likesRes.data)
+        ? likesRes.data
+        : (likesRes.data.likes || []);
+
+      setCount(likes.length);
+
+      if (user) {
+        const isLiked = likes.some(
+          (like) => like.user_id === user.id
+        );
+
+        setLiked(isLiked);
       }
+    } catch (err) {
+      console.error("Failed to fetch likes:", err);
     }
-    fetchData();
-  }, [postId, user]);
+
+    
+    try {
+      const commentsRes = await getComments(postId);
+
+      const comments = Array.isArray(commentsRes.data)
+        ? commentsRes.data
+        : (commentsRes.data.comments || []);
+
+      setCommentCount(comments.length);
+    } catch (err) {
+      console.error("Failed to fetch comments:", err);
+    }
+  }
+
+  fetchData();
+}, [postId, user]);
 
 const handleLikeToggle = async () => {
   try {

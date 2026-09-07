@@ -15,6 +15,7 @@ func SetUpRoutes(r *gin.Engine, cfg *config.Config, db *gorm.DB){
 	r.GET("/posts/:postId/comments", handlers.GetComments(db))
 	r.GET("/feed", handlers.GetFeed(db))
 	r.GET("/search", handlers.SearchRepos(db))
+	r.GET("/posts/:postId/likes", handlers.GetAllLikes(db))
 	api:=r.Group("/api")
 	api.Use(middleware.AuthMiddleware(cfg.JWTSecret))
 	{
@@ -25,7 +26,6 @@ func SetUpRoutes(r *gin.Engine, cfg *config.Config, db *gorm.DB){
 		api.POST("/posts/:postId/comments", handlers.CreateComment(db))
 		api.DELETE("/comments/:commentId", handlers.DeleteComment(db))
 		api.POST("/posts/:postId/like", handlers.ToggleLike(db))
-		api.GET("/posts/:postId/likes", handlers.GetAllLikes(db))
 		api.PATCH("/me", handlers.UpdateUserProfile(db))
 		api.GET("/me", handlers.GetMe(db))
 		

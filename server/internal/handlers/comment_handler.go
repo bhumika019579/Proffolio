@@ -52,7 +52,7 @@ func CreateComment(db *gorm.DB)gin.HandlerFunc{
 }
 func GetComments(db *gorm.DB)gin.HandlerFunc{
 	return func(c*gin.Context){
-		postID:=c.Param("post_id")
+		postID:=c.Param("postId")
 		postIDuint,err:=strconv.ParseUint(postID,10,64)
 		 if err != nil {
            c.JSON(http.StatusBadRequest, gin.H{"error": "invalid post id"})
@@ -64,7 +64,7 @@ func GetComments(db *gorm.DB)gin.HandlerFunc{
 			return
 		 }
 		 var comments []models.Comment
-		 if err:=db.Where("post_id=?",uint(postIDuint)).Preload("User").Order("created_at_asc").
+		 if err:=db.Where("post_id=?",uint(postIDuint)).Preload("User").Order("created_at asc").
 		 Find(&comments).Error;err!=nil{
 			c.JSON(http.StatusInternalServerError,gin.H{"error":"failed to fetch comments"})
 			return 
