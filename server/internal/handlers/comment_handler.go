@@ -16,7 +16,7 @@ type CreateCommentInput struct {
 func CreateComment(db *gorm.DB)gin.HandlerFunc{
 	return func( c*gin.Context){
 		userID:=c.GetUint("user_id")
-		postID:=c.Param("post_id")
+		postID:=c.Param("postId")
 		var input CreateCommentInput
 		if err:=c.ShouldBindJSON(&input);err!=nil{
 			c.JSON(http.StatusBadRequest,gin.H{"error":"invalid request body"})

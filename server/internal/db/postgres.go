@@ -33,18 +33,5 @@ func Connect(cfg *config.Config)*gorm.DB{
 		log.Fatal("failed to migrate database :",err)
 	}
 	log.Println("database migrated successfully")
-	sqlDB, err := database.DB()
-if err != nil {
-	log.Fatal("failed to get sql db:", err)
-}
-
-var dbName string
-var schema string
-
-sqlDB.QueryRow("SELECT current_database()").Scan(&dbName)
-sqlDB.QueryRow("SELECT current_schema()").Scan(&schema)
-
-fmt.Println("GO DATABASE:", dbName)
-fmt.Println("GO SCHEMA:", schema)
 	return database
 }
