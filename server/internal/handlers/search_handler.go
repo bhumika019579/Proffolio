@@ -17,7 +17,7 @@ func SearchRepos(db *gorm.DB)gin.HandlerFunc{
 		}
 		searchTeam:="%"+query+"%"
 		var posts []models.Post
-		if err:=db.Preload("User").Preload("Repo").
+		if err:=db.Preload("User").Preload("Repo"). Preload("Repo.RepoTags").Preload("Repo.RepoTags.Tag").
 		Joins("JOIN repos ON repos.id=posts.repo_id").
 		Joins("JOIN users ON users.id=posts.user_id").
 		Joins("JOIN repo_tags ON repo_tags.repo_id = repos.id").

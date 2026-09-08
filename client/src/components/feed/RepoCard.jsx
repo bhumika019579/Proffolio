@@ -26,17 +26,27 @@ function RepoCard({ repo }) {
         backgroundColor: "var(--color-bg-soft)",
       }}
     >
-      {/* Repository name */}
-      <div
-        style={{
-          fontWeight: "600",
-          marginBottom: "4px",
-        }}
-      >
-        {repo.repo_name}
-      </div>
-
-      {/* Repository summary */}
+      <a
+      href={repo.repo_url}
+      target="_blank"
+       rel="noopener noreferrer"
+      style={{
+    fontWeight: "600",
+    marginBottom: "4px",
+    display: "inline-block",
+    color: "var(--color-text)",
+    textDecoration: "none",
+    cursor: "pointer",
+     }}
+     onMouseEnter={(e) => {
+       e.currentTarget.style.textDecoration = "underline";
+     }}
+      onMouseLeave={(e) => {
+       e.currentTarget.style.textDecoration = "none";
+     }}
+>
+  {repo.repo_name}
+</a>
       <p
         style={{
           fontSize: "14px",
@@ -46,7 +56,6 @@ function RepoCard({ repo }) {
         {repo.summary}
       </p>
 
-      {/* Repository stats */}
       <div
         style={{
           display: "flex",
@@ -59,8 +68,6 @@ function RepoCard({ repo }) {
         <span>🍴 {repo.forks}</span>
         <span>📝 {repo.commit_count} commits</span>
       </div>
-
-      {/* Language breakdown */}
       {repo.repo_tags?.length > 0 && (
         <div style={{ marginTop: "14px" }}>
           {/* Language bar */}

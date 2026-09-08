@@ -22,6 +22,8 @@ func GetUserProfile(db *gorm.DB)gin.HandlerFunc{
 		var posts []models.Post
 		if err:=db.Where("user_id=?",user.ID).
 		Preload("Repo").
+		 Preload("Repo.RepoTags").
+         Preload("Repo.RepoTags.Tag").
 		Preload("User").
 		Order("created_at desc").
 		Find(&posts).Error;err!=nil{

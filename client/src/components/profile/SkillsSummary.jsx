@@ -17,7 +17,7 @@ function SkillsSummary({ skills }) {
               borderRadius: "16px",
               fontSize: "13px",
               fontWeight: "600",
-              color: "white",
+              color: "black",
               background: "linear-gradient(135deg, var(--color-primary-start), var(--color-primary-end))",
             }}
           >

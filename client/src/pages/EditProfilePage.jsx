@@ -1,14 +1,28 @@
-import { useState } from "react";
+import { useState ,useEffect} from "react";
 import { useNavigate } from "react-router-dom";
-import { updateProfile } from "../api/userApi";
+import { updateProfile,getMe } from "../api/userApi";
 import { useAuth } from "../hooks/useAuth";
 
 function EditProfilePage() {
   const { user } = useAuth();
-  const [bio, setBio] = useState(user?.bio || "");
-  const [skills, setSkills] = useState(user?.skills || "");
+  const [bio, setBio] = useState( "");
+  const [skills, setSkills] = useState( "");
   const [saving, setSaving] = useState(false);
   const navigate = useNavigate();
+  useEffect(() => {
+  async function loadUser() {
+    try {
+      const res = await getMe();
+
+      setBio(res.data.bio || "");
+      setSkills(res.data.skills || "");
+    } catch (err) {
+      console.error("Failed to load profile:", err);
+    }
+  }
+
+  loadUser();
+}, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
