@@ -21,7 +21,7 @@ func GetFeed(db *gorm.DB)gin.HandlerFunc{
 		}
 		offset := (page - 1) * limit
 		var posts []models.Post
-		if err:=db.Preload("User").Preload("Repo").
+		if err:=db.Preload("User").Preload("Repo").Preload("Repo.RepoTags"). Preload("Repo.RepoTags.Tag").
 		Order("created_at desc").Limit(limit).Offset(offset).
 		Find(&posts).Error;err!=nil{
 			c.JSON(http.StatusInternalServerError,gin.H{"error":"failed to fetch feed"})

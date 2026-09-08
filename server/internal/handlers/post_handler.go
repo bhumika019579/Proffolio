@@ -39,7 +39,8 @@ func CreatePost(db *gorm.DB)gin.HandlerFunc{
 			c.JSON(http.StatusInternalServerError,gin.H{"error":"failed to create post"})
 			return 
 		}
-		if err:=db.Preload("User").Preload("Repo").First(&newPost,newPost.ID).Error;err!=nil{
+		if err:=db.Preload("User").Preload("Repo").Preload("Repo.RepoTags").
+          Preload("Repo.RepoTags.Tag").First(&newPost,newPost.ID).Error;err!=nil{
 			c.JSON(http.StatusInternalServerError,gin.H{"error":"post created but failed to fetch its details"})
 			return 
 		}

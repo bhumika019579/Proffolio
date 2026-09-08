@@ -13,6 +13,7 @@ type Repo struct {
 	CommitCount int       `json:"commit_count"`
 	Summary     string    `json:"summary"`
 	Status      string    `gorm:"default:pending" json:"status"`
+	RepoTags []RepoTag `gorm:"foreignKey:RepoID" json:"repo_tags"`
 	CreatedAt   time.Time `json:"created_at"`
 	UpdatedAt   time.Time `json:"updated_at"`
 }
