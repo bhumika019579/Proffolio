@@ -1,10 +1,17 @@
 import Navbar from "./Navbar";
 
-function Layout({ children }) {
+function Layout({ children, theme, toggleTheme }) {
   return (
     <div>
-      <Navbar />
-      <div style={{ maxWidth: "700px", margin: "0 auto", padding: "24px 16px" }}>
+      <Navbar theme={theme} toggleTheme={toggleTheme} />
+
+      <div
+        style={{
+          maxWidth: "700px",
+          margin: "0 auto",
+          padding: "24px 16px",
+        }}
+      >
         {children}
       </div>
     </div>

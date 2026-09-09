@@ -1,22 +1,64 @@
 :root {
-  --color-primary: #C15F3C;
-  --color-primary-hover: #A94F30;
-  --color-primary-light: #EDE1D3;
+  /* Primary */
+  --color-primary: #0a66c2;
+  --color-primary-hover: #004182;
+  --color-primary-light: #e8f3ff;
 
-  --color-bg: #FAF7F2;
-  --color-bg-card: #FFFFFF;
-  --color-bg-soft: #F3EEE5;
+  /* Backgrounds */
+  --color-bg: #f6f7f9;
+  --color-bg-card: #ffffff;
+  --color-bg-soft: #f3f4f6;
 
-  --color-border: #E8E2D8;
+  /* Borders */
+  --color-border: #e5e7eb;
 
-  --color-text-primary: #2B2620;
-  --color-text-secondary: #7A7368;
+  /* Text */
+  --color-text-primary: #18181b;
+  --color-text-secondary: #6b7280;
 
-  --color-verified: #6B8E5A;
-  --color-error: #C0392B;
+  /* Status */
+  --color-verified: #0a66c2;
+  --color-verified-bg: #e8f3ff;
+  --color-error: #dc2626;
 
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-display: 'Space Grotesk', 'Inter', sans-serif;
+  --font-mono: 'JetBrains Mono', 'SFMono-Regular', monospace;
 }
+
+
+/* =========================
+   DARK THEME
+   ========================= */
+
+[data-theme="dark"] {
+  /* Primary */
+  --color-primary: #4c9aff;
+  --color-primary-hover: #70b0ff;
+  --color-primary-light: #16283d;
+
+  /* Backgrounds */
+  --color-bg: #0d1117;
+  --color-bg-card: #161b22;
+  --color-bg-soft: #21262d;
+
+  /* Borders */
+  --color-border: #30363d;
+
+  /* Text */
+  --color-text-primary: #f0f6fc;
+  --color-text-secondary: #8b949e;
+
+  /* Status */
+  --color-verified: #4c9aff;
+  --color-verified-bg: #16283d;
+  --color-error: #f85149;
+}
+
+
+/* =========================
+   GLOBAL
+   ========================= */
 
 * {
   box-sizing: border-box;
@@ -26,13 +68,23 @@ body {
   margin: 0;
   background-color: var(--color-bg);
   color: var(--color-text-primary);
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
 }
 
 a {
   color: inherit;
 }
 
-/* Buttons */
+h1, h2, h3, h4, .logo {
+  font-family: var(--font-display);
+}
+
+
+/* =========================
+   BUTTONS
+   ========================= */
 
 .btn-primary {
   background-color: var(--color-primary);
@@ -56,6 +108,7 @@ a {
   cursor: not-allowed;
 }
 
+
 .btn-secondary {
   background-color: transparent;
   color: var(--color-primary);
@@ -65,14 +118,19 @@ a {
   font-weight: 600;
   font-size: 14px;
   cursor: pointer;
-  transition: background-color 0.15s ease;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
 }
 
 .btn-secondary:hover {
   background-color: var(--color-primary-light);
 }
 
-/* Cards */
+
+/* =========================
+   CARDS
+   ========================= */
 
 .card {
   background: var(--color-bg-card);
@@ -82,7 +140,10 @@ a {
   margin-bottom: 12px;
 }
 
-/* Inputs */
+
+/* =========================
+   INPUTS
+   ========================= */
 
 .input-field {
   width: 100%;
@@ -101,7 +162,10 @@ a {
   border-color: var(--color-primary);
 }
 
-/* Tags */
+
+/* =========================
+   TAGS
+   ========================= */
 
 .tag-pill {
   font-size: 12px;
@@ -111,4 +175,101 @@ a {
   background-color: var(--color-primary-light);
   color: var(--color-primary);
   display: inline-block;
+}
+
+
+/* =========================
+   VERIFIED BADGE
+   ========================= */
+
+.verified-badge {
+  color: var(--color-verified);
+  font-size: 15px;
+  vertical-align: -2px;
+}
+
+
+/* =========================
+   AVATAR
+   ========================= */
+
+.avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--color-verified-bg);
+  border: 1px solid var(--color-primary);
+  flex-shrink: 0;
+}
+
+.avatar-sm {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--color-verified-bg);
+  border: 1px solid var(--color-primary);
+  flex-shrink: 0;
+}
+
+
+/* =========================
+   POST META (stats, timestamps)
+   ========================= */
+
+.post-meta,
+.stat-row {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
+
+/* =========================
+   LANGUAGE BAR
+   ========================= */
+
+.language-bar {
+  display: flex;
+  height: 6px;
+  border-radius: 4px;
+  overflow: hidden;
+  gap: 1px;
+  margin: 8px 0;
+}
+
+.language-bar-segment {
+  height: 100%;
+}
+
+.language-legend {
+  display: flex;
+  gap: 14px;
+  font-size: 11.5px;
+  color: var(--color-text-secondary);
+  font-family: var(--font-mono);
+  flex-wrap: wrap;
+}
+
+
+/* =========================
+   THEME TOGGLE
+   ========================= */
+
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--color-border);
+  background: var(--color-bg-card);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.theme-toggle:hover {
+  background-color: var(--color-bg-soft);
+  color: var(--color-text-primary);
 }
