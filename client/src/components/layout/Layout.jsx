@@ -7,7 +7,7 @@ function Layout({ children, theme, toggleTheme }) {
 
       <div
         style={{
-          maxWidth: "700px",
+          maxWidth: "960px",
           margin: "0 auto",
           padding: "24px 16px",
         }}

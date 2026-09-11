@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link,NavLink,useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 
 function Navbar({ theme, toggleTheme }) {
@@ -24,30 +24,124 @@ function Navbar({ theme, toggleTheme }) {
       style={{
         display: "flex",
         alignItems: "center",
-        justifyContent: "space-between",
-        padding: "12px 24px",
+        padding: "10px 24px",
         borderBottom: "1px solid var(--color-border)",
         backgroundColor: "var(--color-bg-card)",
+        gap: "24px",
       }}
     >
+      {/* Logo */}
       <Link
         to="/"
         style={{
           fontWeight: "700",
-          fontSize: "20px",
+          fontSize: "30px",
           textDecoration: "none",
           color: "var(--color-primary)",
+          flexShrink: 0,
+          marginRight: "150px",
         }}
       >
         Prooffolio
       </Link>
 
+ {/* Navigation */}
+<div
+  style={{
+    display: "flex",
+    alignItems: "center",
+    gap: "25px",
+    flexShrink: 0,
+  }}
+>
+  <NavLink
+    to="/"
+    style={({ isActive }) => ({
+      textDecoration: isActive ? "underline" : "none",
+      textUnderlineOffset: "4px",
+      textDecorationThickness: "2px",
+      color: isActive
+        ? "#1d4ed8"
+        : "var(--color-text-secondary)",
+      fontSize: "14px",
+      fontWeight: "600",
+      transition: "color 0.15s ease",
+    })}
+    onMouseEnter={(e) => {
+      e.currentTarget.style.color = "#1d4ed8";
+    }}
+    onMouseLeave={(e) => {
+      e.currentTarget.style.color =
+        e.currentTarget.getAttribute("aria-current")
+          ? "#1d4ed8"
+          : "var(--color-text-secondary)";
+    }}
+  >
+    Home
+  </NavLink>
+
+  <NavLink
+    to="/search"
+    style={({ isActive }) => ({
+      textDecoration: isActive ? "underline" : "none",
+      textUnderlineOffset: "4px",
+      textDecorationThickness: "2px",
+      color: isActive
+        ? "#1d4ed8"
+        : "var(--color-text-secondary)",
+      fontSize: "14px",
+      fontWeight: "600",
+      transition: "color 0.15s ease",
+    })}
+    onMouseEnter={(e) => {
+      e.currentTarget.style.color = "#1d4ed8";
+    }}
+    onMouseLeave={(e) => {
+      e.currentTarget.style.color =
+        e.currentTarget.getAttribute("aria-current")
+          ? "#1d4ed8"
+          : "var(--color-text-secondary)";
+    }}
+  >
+    Search
+  </NavLink>
+
+  {user && (
+    <NavLink
+      to={`/profile/${user.github_username}`}
+      style={({ isActive }) => ({
+        textDecoration: isActive ? "underline" : "none",
+        textUnderlineOffset: "4px",
+        textDecorationThickness: "2px",
+        color: isActive
+          ? "#1d4ed8"
+          : "var(--color-text-secondary)",
+        fontSize: "14px",
+        fontWeight: "600",
+        transition: "color 0.15s ease",
+      })}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.color = "#1d4ed8";
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.color =
+          e.currentTarget.getAttribute("aria-current")
+            ? "#1d4ed8"
+            : "var(--color-text-secondary)";
+      }}
+    >
+      Profile
+    </NavLink>
+  )}
+</div>
+
+      {/* Search */}
       <form
         onSubmit={handleSearchSubmit}
         style={{
           flex: 1,
-          maxWidth: "400px",
-          margin: "0 24px",
+          maxWidth: "360px",
+          marginLeft: "auto",
         }}
       >
         <input
@@ -55,23 +149,20 @@ function Navbar({ theme, toggleTheme }) {
           placeholder="Search by name, project, or language..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
+          className="input-field"
           style={{
-            width: "100%",
             padding: "8px 12px",
-            borderRadius: "8px",
-            border: "1px solid var(--color-border)",
-            backgroundColor: "var(--color-bg-card)",
-            color: "var(--color-text-primary)",
-            outline: "none",
           }}
         />
       </form>
 
+      {/* Right Side */}
       <div
         style={{
           display: "flex",
           alignItems: "center",
           gap: "10px",
+          flexShrink: 0,
         }}
       >
         {/* Theme Toggle */}
@@ -80,8 +171,8 @@ function Navbar({ theme, toggleTheme }) {
           aria-label="Toggle theme"
           title={theme === "light" ? "Dark mode" : "Light mode"}
           style={{
-            width: "36px",
-            height: "36px",
+            width: "38px",
+            height: "38px",
             borderRadius: "8px",
             border: "1px solid var(--color-border)",
             backgroundColor: "transparent",
@@ -98,6 +189,7 @@ function Navbar({ theme, toggleTheme }) {
 
         {user ? (
           <>
+            {/* New Post */}
             <button
               className="btn-primary"
               onClick={() => navigate("/create-post")}
@@ -105,15 +197,23 @@ function Navbar({ theme, toggleTheme }) {
               New Post
             </button>
 
-            <Link to={`/profile/${user.github_username}`}>
+            {/* Profile Avatar */}
+            <Link
+              to={`/profile/${user.github_username}`}
+              style={{
+                display: "block",
+              }}
+            >
               <img
                 src={user.avatar_url}
                 alt={user.name}
                 style={{
-                  width: "32px",
-                  height: "32px",
+                  width: "40px",
+                  height: "40px",
                   borderRadius: "50%",
+                  objectFit: "cover",
                   display: "block",
+                  border: "1px solid var(--color-border)",
                 }}
               />
             </Link>

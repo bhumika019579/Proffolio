@@ -1,8 +1,8 @@
 :root {
   /* Primary */
-  --color-primary: #0a66c2;
-  --color-primary-hover: #004182;
-  --color-primary-light: #e8f3ff;
+  --color-primary:#4f46e5;
+  --color-primary-hover: #4338ca;
+  --color-primary-light: #eef2ff;
 
   /* Backgrounds */
   --color-bg: #f6f7f9;
@@ -33,9 +33,9 @@
 
 [data-theme="dark"] {
   /* Primary */
-  --color-primary: #4c9aff;
-  --color-primary-hover: #70b0ff;
-  --color-primary-light: #16283d;
+  --color-primary: #818cf8;
+  --color-primary-hover: #a5b4fc;
+  --color-primary-light: #1e1b4b;
 
   /* Backgrounds */
   --color-bg: #0d1117;
